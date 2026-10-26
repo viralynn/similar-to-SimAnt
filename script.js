@@ -14,7 +14,7 @@ const antsDisplay = document.getElementById("ants");
 const endDayButton = document.getElementById("end-day");
 const foodConsumptionSettings = document.getElementById("food-consumption-settings");
 const starvationWarning = document.getElementById("starvation-warning");
-const starvationThreshold = 3;
+const starvationThreshold = 4;
 
 
 function updateDisplay() {
@@ -22,6 +22,12 @@ function updateDisplay() {
     queenHealthDisplay.textContent = state.queenHealth;
     foodDisplay.textContent = state.food;
     antsDisplay.textContent = state.ants;
+    if (state.starvationDays >= starvationThreshold) {
+        state.ants = Math.max(0, state.ants - (state.starvationDays - starvationThreshold + 1));
+        starvationWarning.textContent = " (Warning: Ants are starving!)";
+    } else {
+        starvationWarning.textContent = "";
+    }
 }
 
 foodConsumptionSettings.addEventListener("change", function () {
@@ -35,16 +41,13 @@ endDayButton.addEventListener("click", function () {
         state.food = 0;
         state.queenHealth--;
         state.starvationDays++;
-        if (state.starvationDays >= starvationThreshold) {
-            state.ants = Math.max(0, state.ants - (state.starvationDays - starvationThreshold + 1));
-            starvationWarning.textContent = " (Warning: Ants are starving!)";
-            }
-        } else {
-            state.starvationDays = 0;
-        }
+
+    } else {
+        state.starvationDays = 0;
+    }
 
 
-        updateDisplay();
-    });
+    updateDisplay();
+});
 
 updateDisplay();
